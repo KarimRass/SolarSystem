@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="CSS/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="CSS/MYSTYLE.css" rel="stylesheet" />
+
+    <style>
+        .form-container {
+          border: 1px solid #000000;
+          padding: 20px;
+          width: fit-content;
+        }
+        .error {
+          color: red;
+          margin-left: 10px;
+        }
+      </style>
+        <script > 
+        function validateForm() {
+        var height = document.getElementById('height').value;
+        var weight = document.getElementById('weight').value;
+        var gender = document.querySelector('input[name="gender"]:checked');
+        var lifestyle = document.querySelectorAll('input[name="lifestyle"]:checked').length;
+        var valid = true;
+
+  // Clear previous results
+  document.getElementById('result').textContent = '';
+
+  // Validate height
+  if(height === '' || isNaN(height) || parseFloat(height) <= 0 || parseFloat(height)>= 2.5) {
+    document.getElementById('heightError').textContent = 'Enter a valid height!';
+    valid = false;
+  } else {
+    document.getElementById('heightError').textContent = '';
+  }
+
+  // Validate weight
+  if(weight === '' || isNaN(weight) || parseFloat(weight) <= 0 || parseFloat(weight) >= 300) {
+    document.getElementById('weightError').textContent = 'Enter a valid weight!';
+    valid = false;
+  } else {
+    document.getElementById('weightError').textContent = '';
+  }
+
+  // Validate gender
+  if(!gender) {
+    document.getElementById('genderError').textContent = 'Select your gender!';
+    valid = false;
+  } else {
+    document.getElementById('genderError').textContent = '';
+  }
+ 
+  // Validate lifestyle
+  if(lifestyle === 0) {
+    document.getElementById('lifestyleError').textContent = 'Select at least one lifestyle option!';
+    valid = false;
+  } else {
+    document.getElementById('lifestyleError').textContent = '';
+  }
+
+  // Prevent form submission if validation fails
+  if(!valid) {
+    event.preventDefault();
+  }
+
+  // If valid, calculate BMI
+  if(valid) {
+    calculateBMI(parseFloat(height), parseFloat(weight));
+  }
+}
+
+function calculateBMI(height, weight) {
+  var bmi = weight / (height * height);
+  document.getElementById('result').textContent = 'Your BMI is ' + bmi.toFixed(2);
+}
+function updateDateTime() {
+  var now = new Date();
+  var dateString = now.toLocaleDateString('en-US', {
+     weekday: 'long', 
+     year: 'numeric', 
+     month: 'long', 
+     day: 'numeric' 
+  });
+  var timeString = now.toLocaleTimeString('en-US', {
+     hour: '2-digit', 
+     minute: '2-digit', 
+     second: '2-digit' 
+  }); 
+  document.getElementById('dateTime').textContent = dateString + ' ' + timeString;
+}
+// This will set the updateDateTime to be called once the window has finished loading.
+window.onload = function() {
+  updateDateTime();
+  setInterval(updateDateTime, 1000);
+};
+
+    </script>
+</head>
+<body>
+    <p id="dateTime"> </p>
+
+    <div class="form-container">
+        <form id="myForm" onsubmit="validateForm(); return false;">
+          <!-- Input for Height -->
+          <label for="height">Height (in meters):</label>
+          <input type="text" id="height" name="height">
+          <span id="heightError" class="error"></span><br>
+      
+          <!-- Input for Weight -->
+          <label for="weight">Weight (in kilograms):</label>
+          <input type="text" id="weight" name="weight">
+          <span id="weightError" class="error"></span><br>
+      
+          <!-- Radio buttons for Gender -->
+          <label>Gender:</label>
+          <label><input type="radio" name="gender" value="male"> Male</label>
+          <label><input type="radio" name="gender" value="female"> Female</label>
+          <span id="genderError" class="error"></span><br>
+      
+          <!-- Checkboxes for Lifestyle -->
+          <label>Lifestyle:</label>
+          <label><input type="checkbox" name="lifestyle" value="active"> Active</label>
+          <label><input type="checkbox" name="lifestyle" value="sedentary"> Sedentary</label>
+          <span id="lifestyleError" class="error"></span><br>
+      
+          <!-- Button to Calculate BMI -->
+          <input type="submit" value="Calculate BMI"><br>
+      
+          <!-- Textarea to display result -->
+          <textarea id="result" readonly></textarea>
+        </form>
+</div>
+</body>
+</html>
